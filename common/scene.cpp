@@ -8,7 +8,7 @@ Scene::Scene()
 	_isRunning = true;
 
 	_sprite = NULL;
-	_object = NULL;
+	_model = NULL;
 }
 
 Scene::~Scene()
@@ -25,12 +25,12 @@ void Scene::addSprite(Sprite* spr, const char* ddsstring)
 	_spritechildren.push_back(_sprite);
 }
 
-void Scene::addObject(Object* obj, const char* objstring, const char* ddsstring)
+void Scene::addModel(Model* mdl, const char* objstring, const char* ddsstring)
 {
-	_object = new Object();
-	*_object = *obj;
-	_object->addMesh(objstring, ddsstring);
+	_model = new Model();
+	*_model = *mdl;
+	_model->addMesh(objstring, ddsstring);
 
-	_objectchildren.push_back(_object);
+	_modelchildren.push_back(_model);
 }
 

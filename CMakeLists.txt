@@ -61,8 +61,8 @@ add_executable(demo
 	common/texture.cpp
 	common/sprite.cpp	
 	common/renderer.cpp
-	common/object.cpp
-	common/gameobject.cpp
+	common/model.cpp
+	common/entity.cpp
 )
 target_link_libraries(demo
 	${ALL_LIBS}

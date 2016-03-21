@@ -1,17 +1,17 @@
-#include "object.h"
+#include "model.h"
 
 
-Object::Object()
+Model::Model()
 {
 	_texture = NULL;
 }
 
-Object::~Object()
+Model::~Model()
 {
 
 }
 
-void Object::addMesh(const char* o, const char* string)
+void Model::addMesh(const char* o, const char* string)
 {
 	texture_name = string;
 	if(string != NULL){
@@ -27,7 +27,7 @@ void Object::addMesh(const char* o, const char* string)
 	std::cout << "\n" << std::endl;
 }
 
-bool Object::loadOBJ(
+bool Model::loadOBJ(
 	const char* path,
 	std::vector<glm::vec3> & out_vertices,
 	std::vector<glm::vec2> & out_uvs,
@@ -122,7 +122,7 @@ bool Object::loadOBJ(
 	return true;
 }
 
-void Object::buffers() {
+void Model::buffers() {
 	glGenBuffers(1, &_vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, _vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, vertices().size() * sizeof(glm::vec3), &vertices()[0], GL_STATIC_DRAW);

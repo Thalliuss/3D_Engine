@@ -2,7 +2,7 @@
 #define SCENE01_H
 
 #include <common/scene.h>
-#include <common/sprite.h>
+#include <common/entity.h>
 
 class Scene01 : public Scene
 {
@@ -11,9 +11,7 @@ public:
 	~Scene01();
 private:
 	Sprite* sprite;
-	Object* cube;
-	Object* cube2;
-	Object* cube3;
+	Model* cube;
 };
 
 #endif // !SCENE01_H

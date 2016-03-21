@@ -14,11 +14,12 @@
 
 #include <vector>
 #include <common/camera.h>
-#include <common/gameobject.h>
-#include <common/sprite.h>
-#include <common/object.h>
+#include <common/entity.h>
 
-class Scene : public GameObject
+#include <common/sprite.h>
+#include <common/model.h>
+
+class Scene : public Entity
 {
 public:
 	Scene();
@@ -29,23 +30,23 @@ public:
 	void stop() { _isRunning = false; }
 
 	void addSprite(Sprite* spr, const char* ddsstring);	
-	void addObject(Object* obj, const char* objstring, const char* ddsstring);
+	void addModel(Model* mdl, const char* objstring, const char* ddsstring);
 
 	void updateScene(float deltaTime) {}
 
 	Camera* camera() { return _camera; }
 
 	std::vector<Sprite*> spritechildren() {return _spritechildren;}
-	std::vector<Object*> objectchildren() {return _objectchildren;}
+	std::vector<Model*> modelchildren() {return _modelchildren;}
 
 private:
 	bool _isRunning;
 
 	Camera* _camera;
 	Sprite* _sprite;
-	Object* _object;
+	Model* _model;
 
 	std::vector<Sprite*> _spritechildren;
-	std::vector<Object*> _objectchildren;
+	std::vector<Model*> _modelchildren;
 };
 #endif // SCENE_H

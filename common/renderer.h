@@ -18,11 +18,12 @@
 #include <glm/gtx/euler_angles.hpp>
 using namespace glm;
 
-#include <common/camera.h>
-#include <common/sprite.h>
-#include <common/object.h>
 #include <common/shader.h>
+
+#include <common/sprite.h>
+#include <common/model.h>
 #include <common/scene.h>
+
 #include <vector>
 
 class Renderer 
@@ -32,7 +33,7 @@ public:
 	virtual ~Renderer();
 	void renderScene(Scene* scene);
 	void renderSprite(Sprite* sprite);
-	void renderObject(Object* object);
+	void renderModel(Model* model);
 
 	GLFWwindow* window() { return _window; };
 

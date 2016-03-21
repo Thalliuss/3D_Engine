@@ -57,7 +57,7 @@ int Renderer::init()
 	glfwSetCursorPos(_window, 1024 / 2, 768 / 2);
 
 	// background
-	glClearColor(0.0f, 1.0f, 0.0f, 0.0f);
+	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
@@ -97,13 +97,13 @@ void Renderer::renderScene(Scene* scene)
 	ViewMatrix = scene->camera()->getViewMatrix();
 
 	// see if we need to render anything
-	std::vector<Object*> objects = scene->objectchildren();
-	for (int i = 0; i < objects.size(); i++) {
-		Object* object = new Object();
-		object = objects[i];
-		if (object != NULL) {
+	std::vector<Model*> models = scene->modelchildren();
+	for (int i = 0; i < models.size(); i++) {
+		Model* model = new Model();
+		model = models[i];
+		if (model != NULL) {
 			// render the Object 
-			this->renderObject(object);
+			this->renderModel(model);
 		}
 	}
 	std::vector<Sprite*> sprites = scene->spritechildren();
@@ -178,7 +178,7 @@ void Renderer::renderSprite(Sprite* s)
 	glDisableVertexAttribArray(vertexPosition_modelspaceID);
 	glDisableVertexAttribArray(vertexUVID);
 }
-void Renderer::renderObject(Object* o)
+void Renderer::renderModel(Model* m)
 {
 	glm::mat4 ModelMatrix = glm::mat4(1.0f);
 
@@ -186,9 +186,9 @@ void Renderer::renderObject(Object* o)
 	glUseProgram(programID);
 
 	// Build the Model matrix
-	glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(o->position.x, o->position.y, o->position.z));
-	glm::mat4 rotationMatrix = glm::eulerAngleYXZ(o->rotation.x, o->rotation.y, o->rotation.z);
-	glm::mat4 scalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(o->scale.x, o->scale.y, o->scale.z));
+	glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(m->position.x, m->position.y, m->position.z));
+	glm::mat4 rotationMatrix = glm::eulerAngleYXZ(m->rotation.x, m->rotation.y, m->rotation.z);
+	glm::mat4 scalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(m->scale.x, m->scale.y, m->scale.z));
 
 	ModelMatrix = translationMatrix * rotationMatrix * scalingMatrix;
 
@@ -197,16 +197,16 @@ void Renderer::renderObject(Object* o)
 	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 
 	// Bind our texture in Texture Unit 0
-	if (o->texture() != NULL) {
+	if (m->texture() != NULL) {
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, o->texture());
+		glBindTexture(GL_TEXTURE_2D, m->texture());
 		// Set our "myTextureSampler" sampler to user Texture Unit 0
 		glUniform1i(textureID, 0);
 	}
 
 	// 1st attribute buffer : vertices
 	glEnableVertexAttribArray(vertexPosition_modelspaceID);
-	glBindBuffer(GL_ARRAY_BUFFER, o->vertexbuffer());
+	glBindBuffer(GL_ARRAY_BUFFER, m->vertexbuffer());
 	glVertexAttribPointer(
 		vertexPosition_modelspaceID,  // The attribute we want to configure
 		3,							// size : x+y+z => 3
@@ -218,7 +218,7 @@ void Renderer::renderObject(Object* o)
 
 	// 2nd attribute buffer : UVs
 	glEnableVertexAttribArray(vertexUVID);
-	glBindBuffer(GL_ARRAY_BUFFER, o->uvbuffer());
+	glBindBuffer(GL_ARRAY_BUFFER, m->uvbuffer());
 	glVertexAttribPointer(
 		vertexUVID,				   // The attribute we want to configure
 		2,							// size : U+V => 2
@@ -229,7 +229,7 @@ void Renderer::renderObject(Object* o)
 		);
 
 
-	glDrawArrays(GL_TRIANGLES, 0, o->vertices().size());
+	glDrawArrays(GL_TRIANGLES, 0, m->vertices().size());
 
 	glDisableVertexAttribArray(vertexPosition_modelspaceID);
 	glDisableVertexAttribArray(vertexUVID);

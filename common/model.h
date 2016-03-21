@@ -1,5 +1,5 @@
-#ifndef OBJECTLOADER_H
-#define OBJECTLOADER_H
+#ifndef MODEL_H
+#define MODEL_H
 
 // Include standard headers
 #include <stdio.h>
@@ -21,15 +21,15 @@ using namespace glm;
 
 #include <vector>
 #include <common/texture.h>
-#include <common/gameobject.h>
+#include <common/entity.h>
 
-class Object: public GameObject
+class Model: public Entity
 {
 public:
-	Object();
-	virtual ~Object();
+	Model();
+	virtual ~Model();
 
-	void Object::addMesh(const char* o, const char* t);
+	void Model::addMesh(const char* o, const char* t);
 
 	bool loadOBJ(
 		const char* path,
@@ -65,5 +65,5 @@ private:
 
 };
 
-#endif // !OBJECTLOADER_H
+#endif // !MODEL_H
 

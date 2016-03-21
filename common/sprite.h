@@ -13,11 +13,16 @@
 // Include GLFW
 #include <glfw3.h>
 
+// Include GLM
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/euler_angles.hpp>
+using namespace glm;
+
 #include <common/texture.h>
-#include <common/gameobject.h>
+#include <common/entity.h>
 
-
-class Sprite: public GameObject
+class Sprite: public Entity
 {
 public:
 	Sprite();

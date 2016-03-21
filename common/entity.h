@@ -1,5 +1,5 @@
-#ifndef GAMEOBJECT_H
-#define GAMEOBJECT_H
+#ifndef ENTITY_H
+#define ENTITY_H
 
 // Include standard headers
 #include <stdio.h>
@@ -21,11 +21,11 @@ using namespace glm;
 
 #include <vector>
 
-class GameObject
+class Entity
 {
 public:
-	GameObject();
-	virtual ~GameObject();
+	Entity();
+	virtual ~Entity();
 	virtual void update(float deltaTime) {}
 
 	glm::vec3 position;
@@ -34,4 +34,4 @@ public:
 private:
 
 };
-#endif // !GAMEOBJECT_H
+#endif // !ENTITY_H
