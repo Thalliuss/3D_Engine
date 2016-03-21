@@ -10,10 +10,10 @@ public:
 	Scene01();
 	~Scene01();
 private:
-	Sprite* s;
-	Object* o;
-	Object* sphere;
+	Sprite* sprite;
 	Object* cube;
+	Object* cube2;
+	Object* cube3;
 };
 
 #endif // !SCENE01_H
