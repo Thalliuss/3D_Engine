@@ -15,7 +15,7 @@ void Model::addMesh(const char* o, const char* string)
 {
 	texture_name = string;
 	if(string != NULL){
-		std::cout << "##### New Object Initialized  #####" << std::endl;
+		std::cout << "##### New Model Initialized  #####" << std::endl;
 		_texture = t->loadDDS(texture_name.c_str());
 	}else {
 		_texture = t->loadDDS("assets/temp.DDS");
