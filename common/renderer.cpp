@@ -2,8 +2,8 @@
 
 Renderer::Renderer()
 {
-	window_width = 1024;
-	window_height = 768;
+	window_width = 800;
+	window_height = 600;
 
 	fragment_shader = "shaders/sprite.frag";
 	vertex_shader = "shaders/sprite.vert";
@@ -54,7 +54,7 @@ int Renderer::init()
 
 	// Set the mouse at the center of the screen
 	glfwPollEvents();
-	glfwSetCursorPos(_window, 1024 / 2, 768 / 2);
+	glfwSetCursorPos(_window, window_width / 2, window_height / 2);
 
 	// background
 	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
