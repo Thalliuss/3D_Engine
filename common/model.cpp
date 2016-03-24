@@ -43,7 +43,7 @@ bool Model::loadOBJ(
 
 	FILE * file = fopen(path, "r");
 	if (file == NULL) {
-		printf("Impossible to open the file ! Are you in the right path ? See Tutorial 1 for details\n");
+		printf("Impossible to open the file ! ");
 		getchar();
 		return false;
 	}
@@ -130,4 +130,9 @@ void Model::buffers() {
 	glGenBuffers(1, &_uvbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, _uvbuffer);
 	glBufferData(GL_ARRAY_BUFFER, uvs().size() * sizeof(glm::vec2), &uvs()[0], GL_STATIC_DRAW);
+
+
+	glGenBuffers(1, &_normalbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, _normalbuffer);
+	glBufferData(GL_ARRAY_BUFFER, normals().size() * sizeof(glm::vec3), &normals()[0], GL_STATIC_DRAW);
 }

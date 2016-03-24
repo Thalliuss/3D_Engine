@@ -33,6 +33,8 @@ public:
 	GLuint texture() { return _texture; }
 	GLuint vertexbuffer() { return _vertexbuffer; }
 	GLuint uvbuffer() { return _uvbuffer; }
+	GLuint normalbuffer() { return _normalbuffer; }
+
 
 private:
 	std::string file_name;
@@ -40,6 +42,8 @@ private:
 	GLuint _texture;
 	GLuint _vertexbuffer;
 	GLuint _uvbuffer;
+	GLuint _normalbuffer;
+
 
 	Texture* t;
 };

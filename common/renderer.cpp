@@ -57,7 +57,7 @@ int Renderer::init()
 	glfwSetCursorPos(_window, window_width / 2, window_height / 2);
 
 	// background
-	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.3f, 0.0f);
 
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
@@ -78,13 +78,27 @@ int Renderer::init()
 	// Get a handle for our buffers
 	vertexPosition_modelspaceID = glGetAttribLocation(programID, "vertexPosition_modelspace");
 	vertexUVID = glGetAttribLocation(programID, "vertexUV");
+	vertexNormal_modelspaceID = glGetAttribLocation(programID, "vertexNormal_modelspace");
 
 	// Get a handle for our "MVP" uniform
 	matrixID = glGetUniformLocation(programID, "MVP");
+	
+	// Get a handle for our "viewMatrixID" uniform
+	viewMatrixID = glGetUniformLocation(programID, "V");
+	
+	// Get a handle for our "modelMatrixID" uniform
+	modelMatrixID = glGetUniformLocation(programID, "M");
+
 	// Get a handle for our "myTextureSampler" uniform
 	textureID = glGetUniformLocation(programID, "myTextureSampler");
 
+	// Get a handle for our "LightPosition_worldspace" uniform
+	lightID = glGetUniformLocation(programID, "LightPosition_worldspace");
+
 	ProjectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+
+
+
 	return 0;
 }
 
@@ -95,6 +109,8 @@ void Renderer::renderScene(Scene* scene)
 
 	// get viewMatrix from Camera (Camera position and direction)
 	ViewMatrix = scene->camera()->getViewMatrix();
+
+
 
 	// see if we need to render anything
 	std::vector<Model*> models = scene->modelchildren();
@@ -116,9 +132,13 @@ void Renderer::renderScene(Scene* scene)
 		}
 	}
 
+	glm::vec3 lightPos = glm::vec3(10, 10, -25);
+	glUniform3f(lightID, lightPos.x, lightPos.y, lightPos.z);
+
 	// Swap buffers
 	glfwSwapBuffers(_window);
 	glfwPollEvents();
+
 }
 
 
@@ -139,6 +159,8 @@ void Renderer::renderSprite(Sprite* s)
 	glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
 	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
+	glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
 
 	// Bind our texture in Texture Unit 0
 	glActiveTexture(GL_TEXTURE0);
@@ -172,11 +194,25 @@ void Renderer::renderSprite(Sprite* s)
 		(void*)0					  // array buffer offset
 		);
 
+	// 3rd attribute buffer : normals
+	glEnableVertexAttribArray(vertexNormal_modelspaceID);
+	glBindBuffer(GL_ARRAY_BUFFER, s->normalbuffer());
+	glVertexAttribPointer(
+		vertexNormal_modelspaceID,      // attribute
+		3,                                // size : x+y+z => 3
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
+		);
+
 	// Draw the triangles !
 	glDrawArrays(GL_TRIANGLES, 0, 2 * 3); // 2*3 indices starting at 0 -> 2 triangles
 
 	glDisableVertexAttribArray(vertexPosition_modelspaceID);
 	glDisableVertexAttribArray(vertexUVID);
+	glDisableVertexAttribArray(vertexNormal_modelspaceID);
+
 }
 void Renderer::renderModel(Model* m)
 {
@@ -194,7 +230,12 @@ void Renderer::renderModel(Model* m)
 
 	glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
+
 	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
+	glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
+
+
 
 	// Bind our texture in Texture Unit 0
 	if (m->texture() != NULL) {
@@ -209,10 +250,10 @@ void Renderer::renderModel(Model* m)
 	glBindBuffer(GL_ARRAY_BUFFER, m->vertexbuffer());
 	glVertexAttribPointer(
 		vertexPosition_modelspaceID,  // The attribute we want to configure
-		3,							// size : x+y+z => 3
-		GL_FLOAT,					 // type
-		GL_FALSE,					 // normalized?
-		0,							// stride
+		3,							  // size : x+y+z => 3
+		GL_FLOAT,					  // type
+		GL_FALSE,					  // normalized?
+		0,							  // stride
 		(void*)0					  // array buffer offset
 		);
 
@@ -220,12 +261,25 @@ void Renderer::renderModel(Model* m)
 	glEnableVertexAttribArray(vertexUVID);
 	glBindBuffer(GL_ARRAY_BUFFER, m->uvbuffer());
 	glVertexAttribPointer(
-		vertexUVID,				   // The attribute we want to configure
+		vertexUVID,				    // The attribute we want to configure
 		2,							// size : U+V => 2
-		GL_FLOAT,					 // type
-		GL_FALSE,					 // normalized?
+		GL_FLOAT,					// type
+		GL_FALSE,					// normalized?
 		0,							// stride
-		(void*)0					  // array buffer offset
+		(void*)0					// array buffer offset
+		);
+
+
+	// 3rd attribute buffer : normals
+	glEnableVertexAttribArray(vertexNormal_modelspaceID);
+	glBindBuffer(GL_ARRAY_BUFFER, m->normalbuffer());
+	glVertexAttribPointer(
+		vertexNormal_modelspaceID,      // attribute
+		3,                                // size : x+y+z => 3
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
 		);
 
 
@@ -233,6 +287,7 @@ void Renderer::renderModel(Model* m)
 
 	glDisableVertexAttribArray(vertexPosition_modelspaceID);
 	glDisableVertexAttribArray(vertexUVID);
+	glDisableVertexAttribArray(vertexNormal_modelspaceID);
 }
 
 

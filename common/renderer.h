@@ -48,13 +48,17 @@ private:
 
 	GLuint vertexPosition_modelspaceID;
 	GLuint vertexUVID;
+	GLuint vertexNormal_modelspaceID;
 
 	glm::mat4 ProjectionMatrix;
 	glm::mat4 ViewMatrix;
 
 	GLuint programID;
 	GLuint matrixID;
+	GLuint modelMatrixID;
+	GLuint viewMatrixID;
 	GLuint textureID;
+	GLuint lightID;
 
 	Shader* shader;
 };

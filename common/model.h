@@ -41,12 +41,13 @@ public:
 
 	std::vector<glm::vec3> vertices() { return _vertices; }
 	std::vector<glm::vec2> uvs() { return _uvs; }
-	//currently unused.
 	std::vector<glm::vec3> normals() { return _normals; }
 
-	GLuint vertexbuffer() { return _vertexbuffer; }
 	GLuint texture() { return _texture; }
+
+	GLuint vertexbuffer() { return _vertexbuffer; }
 	GLuint uvbuffer() { return _uvbuffer; }
+	GLuint normalbuffer() { return _normalbuffer; }
 
 private:
 	FILE * file;
@@ -56,9 +57,12 @@ private:
 	std::vector<glm::vec2> _uvs;
 	std::vector<glm::vec3> _normals;
 
+	GLuint _texture;
+
 	GLuint _vertexbuffer;
 	GLuint _uvbuffer;
-	GLuint _texture;
+	GLuint _normalbuffer;
+
 
 	std::string texture_name;
 	std::string object_name;

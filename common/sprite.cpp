@@ -35,12 +35,14 @@ Sprite::Sprite()
 	glGenBuffers(1, &_uvbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, _uvbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
+
 }
 
 Sprite::~Sprite()
 {
 	glDeleteBuffers(1, &_vertexbuffer);
 	glDeleteBuffers(1, &_uvbuffer);
+	glDeleteBuffers(1, &_normalbuffer);
 }
 
 void Sprite::addTexture(const char* string) {
