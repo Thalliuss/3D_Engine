@@ -61,7 +61,9 @@ add_executable(demo
 	common/texture.cpp
 	common/sprite.cpp	
 	common/renderer.cpp
+	common/light.cpp
 	common/model.cpp
+	common/skydome.cpp
 	common/entity.cpp
 )
 target_link_libraries(demo

@@ -1,5 +1,6 @@
 #include "core.h"
 
+
 Core::Core()
 {
 }
@@ -18,11 +19,13 @@ void Core::run(Scene* scene)
 	scene->camera()->updateCamera(_renderer.window());
 
 	// user clicked the 'close' button in the window
-	bool close = false;
-	if (glfwGetKey(_renderer.window(), GLFW_KEY_ESCAPE) == GLFW_PRESS &&
-		glfwWindowShouldClose(_renderer.window()) == 0) {
-		close = true;
-	}if (close == true) { scene->stop(); }
+	if (glfwGetKey(_renderer.window(), GLFW_KEY_ESCAPE) == GLFW_PRESS) { scene->stop(); }
+
+	// TODO
+	//if (glfwGetKey(_renderer.window(), GLFW_KEY_RIGHT_BRACKET) == GLFW_PRESS) { scene->next(); }
+	// TODO
+	//if (glfwGetKey(_renderer.window(), GLFW_KEY_LEFT_BRACKET) == GLFW_PRESS) { scene->previous(); }
+
 
 }
 

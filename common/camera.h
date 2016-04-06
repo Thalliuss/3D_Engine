@@ -22,7 +22,7 @@ private:
 
 	float horizontalAngle = 0.0f;
 	float verticalAngle = 0.0f;
-	float speed = 5.0f; // 5 units / second
+	float speed = 50.0f; // 5 units / second
 	float mouseSpeed = 0.005f;
 
 };

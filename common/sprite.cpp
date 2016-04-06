@@ -36,6 +36,10 @@ Sprite::Sprite()
 	glBindBuffer(GL_ARRAY_BUFFER, _uvbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
 
+	//TODO
+	//glGenBuffers(1, &_normalbuffer);
+	//glBindBuffer(GL_ARRAY_BUFFER, _normalbuffer);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(g_normal_buffer_data), g_normal_buffer_data, GL_STATIC_DRAW);
 }
 
 Sprite::~Sprite()

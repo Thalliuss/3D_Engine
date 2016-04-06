@@ -1,9 +1,8 @@
 #include <common/camera.h>
 
 
-
 Camera::Camera() {
-	ProjectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+	ProjectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 2500.0f);
 	position = glm::vec3(0, 0, -5);
 }
 
@@ -29,11 +28,11 @@ void Camera::updateCamera(GLFWwindow* window)
 	glfwGetCursorPos(window, &xpos, &ypos);
 
 	// Reset mouse position for next frame
-	glfwSetCursorPos(window, 800 / 2, 600 / 2);
+	glfwSetCursorPos(window, 1024 / 2, 750 / 2);
 
 	// Compute new orientation
-	horizontalAngle += mouseSpeed * float(800 / 2 - xpos);
-	verticalAngle += mouseSpeed * float(600 / 2 - ypos);
+	horizontalAngle += mouseSpeed * float(1024 / 2 - xpos);
+	verticalAngle += mouseSpeed * float(750 / 2 - ypos);
 
 	// Direction : Spherical coordinates to Cartesian coordinates conversion
 	glm::vec3 direction(
