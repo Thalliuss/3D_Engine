@@ -23,6 +23,7 @@ using namespace glm;
 #include <common/sprite.h>
 #include <common/model.h>
 #include <common/scene.h>
+#include <common/skydome.h>
 
 #include <vector>
 
@@ -53,9 +54,15 @@ private:
 	glm::mat4 ProjectionMatrix;
 	glm::mat4 ViewMatrix;
 
+	GLuint CMShader;
+
 	GLuint programID;
 	GLuint matrixID;
 	GLuint modelMatrixID;
+	GLuint modelView3x3MatrixID;
+	GLuint diffuseTextureID;
+	GLuint normalTextureID;
+	GLuint specularTextureID;
 	GLuint viewMatrixID;
 	GLuint textureID;
 	GLuint lightID;

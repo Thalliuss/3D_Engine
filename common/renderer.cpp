@@ -2,8 +2,8 @@
 
 Renderer::Renderer()
 {
-	window_width = 800;
-	window_height = 600;
+	window_width = 1024;
+	window_height = 750;
 
 	fragment_shader = "shaders/sprite.frag";
 	vertex_shader = "shaders/sprite.vert";
@@ -50,22 +50,29 @@ int Renderer::init()
 	glfwSetInputMode(_window, GLFW_STICKY_KEYS, GL_TRUE);
 	
 // Hide the mouse and enable unlimited mouvement
-	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
 	// Set the mouse at the center of the screen
 	glfwPollEvents();
 	glfwSetCursorPos(_window, window_width / 2, window_height / 2);
 
 	// background
-	glClearColor(0.0f, 0.0f, 0.3f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
+	
+
+
 	// Accept fragment if it closer to the camera than the former one
 	glDepthFunc(GL_LESS);
 
 	// Cull triangles which normal is not towards the camera
 	glEnable(GL_CULL_FACE);
+
+	// Enable lighting
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
@@ -82,22 +89,20 @@ int Renderer::init()
 
 	// Get a handle for our "MVP" uniform
 	matrixID = glGetUniformLocation(programID, "MVP");
-	
-	// Get a handle for our "viewMatrixID" uniform
 	viewMatrixID = glGetUniformLocation(programID, "V");
-	
-	// Get a handle for our "modelMatrixID" uniform
 	modelMatrixID = glGetUniformLocation(programID, "M");
+	modelView3x3MatrixID = glGetUniformLocation(programID, "MV3x3");
+
+	// Get a handle for our "myTextureSampler" uniform
+	diffuseTextureID = glGetUniformLocation(programID, "DiffuseTextureSampler");
+	normalTextureID = glGetUniformLocation(programID, "NormalTextureSampler");
+	specularTextureID = glGetUniformLocation(programID, "SpecularTextureSampler");
 
 	// Get a handle for our "myTextureSampler" uniform
 	textureID = glGetUniformLocation(programID, "myTextureSampler");
 
 	// Get a handle for our "LightPosition_worldspace" uniform
 	lightID = glGetUniformLocation(programID, "LightPosition_worldspace");
-
-	ProjectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-
-
 
 	return 0;
 }
@@ -107,9 +112,9 @@ void Renderer::renderScene(Scene* scene)
 	// Clear the screen
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// get viewMatrix from Camera (Camera position and direction)
+	// get viewMatrix and projectionMatrix from Camera (Camera position and direction)
 	ViewMatrix = scene->camera()->getViewMatrix();
-
+	ProjectionMatrix = scene->camera()->getProjectionMatrix();
 
 
 	// see if we need to render anything
@@ -131,8 +136,13 @@ void Renderer::renderScene(Scene* scene)
 			this->renderSprite(sprite);
 		}
 	}
+	if (scene->sky() != NULL) {
+		this->renderModel(scene->sky());
+	}
+	//GLfloat lightpos[] = { 10, 10, 10, 1.0 };
+	//glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
-	glm::vec3 lightPos = glm::vec3(10, 10, -25);
+	glm::vec3 lightPos = glm::vec3(10, 10, -60);
 	glUniform3f(lightID, lightPos.x, lightPos.y, lightPos.z);
 
 	// Swap buffers
@@ -140,7 +150,6 @@ void Renderer::renderScene(Scene* scene)
 	glfwPollEvents();
 
 }
-
 
 void Renderer::renderSprite(Sprite* s)
 {
@@ -289,6 +298,3 @@ void Renderer::renderModel(Model* m)
 	glDisableVertexAttribArray(vertexUVID);
 	glDisableVertexAttribArray(vertexNormal_modelspaceID);
 }
-
-
-

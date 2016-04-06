@@ -15,6 +15,7 @@
 #include <vector>
 #include <common/camera.h>
 #include <common/entity.h>
+#include <common/skydome.h>
 
 #include <common/sprite.h>
 #include <common/model.h>
@@ -38,6 +39,7 @@ public:
 
 	std::vector<Sprite*> spritechildren() {return _spritechildren;}
 	std::vector<Model*> modelchildren() {return _modelchildren;}
+	Skydome* sky() { return _sky; }
 
 private:
 	bool _isRunning;
@@ -45,6 +47,7 @@ private:
 	Camera* _camera;
 	Sprite* _sprite;
 	Model* _model;
+	Skydome* _sky;
 
 	std::vector<Sprite*> _spritechildren;
 	std::vector<Model*> _modelchildren;

@@ -9,6 +9,7 @@ Scene::Scene()
 
 	_sprite = NULL;
 	_model = NULL;
+	_sky = NULL;
 }
 
 Scene::~Scene()
@@ -33,4 +34,5 @@ void Scene::addModel(Model* mdl, const char* objstring, const char* ddsstring)
 
 	_modelchildren.push_back(_model);
 }
+
 
