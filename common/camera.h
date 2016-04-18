@@ -7,10 +7,12 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
+
 class Camera {
 public:
 	Camera();
 
+	glm::vec3 position;
 	glm::mat4 getViewMatrix();
 	glm::mat4 getProjectionMatrix();
 	void updateCamera(GLFWwindow* window);
@@ -18,7 +20,6 @@ private:
 	glm::mat4 ViewMatrix;
 	glm::mat4 ProjectionMatrix;
 
-	glm::vec3 position;
 
 	float horizontalAngle = 0.0f;
 	float verticalAngle = 0.0f;

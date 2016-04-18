@@ -2,14 +2,14 @@
 
 
 Camera::Camera() {
-	ProjectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 2500.0f);
-	position = glm::vec3(0, 0, -5);
+	ProjectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 2500.0f);
+	position = vec3(0, 0, -5);
 }
 
-glm::mat4 Camera::getViewMatrix() {
+mat4 Camera::getViewMatrix() {
 	return ViewMatrix;
 }
-glm::mat4 Camera::getProjectionMatrix() {
+mat4 Camera::getProjectionMatrix() {
 	return ProjectionMatrix;
 }
 
@@ -35,21 +35,21 @@ void Camera::updateCamera(GLFWwindow* window)
 	verticalAngle += mouseSpeed * float(750 / 2 - ypos);
 
 	// Direction : Spherical coordinates to Cartesian coordinates conversion
-	glm::vec3 direction(
+	vec3 direction(
 		cos(verticalAngle) * sin(horizontalAngle),
 		sin(verticalAngle),
 		cos(verticalAngle) * cos(horizontalAngle)
 		);
 
 	// Right vector
-	glm::vec3 right = glm::vec3(
+	vec3 right = vec3(
 		sin(horizontalAngle - 3.14f / 2.0f),
 		0,
 		cos(horizontalAngle - 3.14f / 2.0f)
 		);
 
 	// Up vector
-	glm::vec3 up = glm::cross(right, direction);
+	vec3 up = cross(right, direction);
 
 	// Move forward
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
@@ -69,7 +69,7 @@ void Camera::updateCamera(GLFWwindow* window)
 	}
 
 	// Camera matrix
-	ViewMatrix = glm::lookAt(
+	ViewMatrix = lookAt(
 		position,           // Camera is here
 		position + direction, // and looks here : at the same position, plus "direction"
 		up                  // Head is up (set to 0,-1,0 to look upside-down)

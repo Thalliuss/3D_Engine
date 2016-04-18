@@ -26,6 +26,7 @@ using namespace glm;
 #include <common/skydome.h>
 
 #include <vector>
+using namespace std;
 
 class Renderer 
 {
@@ -33,6 +34,7 @@ public:
 	Renderer();
 	virtual ~Renderer();
 	void renderScene(Scene* scene);
+	void renderSkydome(Skydome* skydome);
 	void renderSprite(Sprite* sprite);
 	void renderModel(Model* model);
 
@@ -44,19 +46,20 @@ private:
 	int window_width;
 	int window_height;
 
-	std::string fragment_shader;
-	std::string vertex_shader;
+	string sprite_fragment_shader;
+	string sprite_vertex_shader;
+	string fullbright_fragment_shader;
+	string fullbright_vertex_shader;
 
 	GLuint vertexPosition_modelspaceID;
 	GLuint vertexUVID;
 	GLuint vertexNormal_modelspaceID;
 
-	glm::mat4 ProjectionMatrix;
-	glm::mat4 ViewMatrix;
-
-	GLuint CMShader;
+	mat4 ProjectionMatrix;
+	mat4 ViewMatrix;
 
 	GLuint programID;
+	GLuint fullbrightID;
 	GLuint matrixID;
 	GLuint modelMatrixID;
 	GLuint modelView3x3MatrixID;
@@ -69,6 +72,5 @@ private:
 
 	Shader* shader;
 };
-
 
 #endif // !RENDERER_H

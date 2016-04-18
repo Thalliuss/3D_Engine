@@ -26,7 +26,7 @@ class Entity
 public:
 	Entity();
 	virtual ~Entity();
-	virtual void update(float deltaTime) {}
+	virtual void update(float deltaTime);
 
 	glm::vec3 position;
 	glm::vec3 rotation;

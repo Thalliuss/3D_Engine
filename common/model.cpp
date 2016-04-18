@@ -29,16 +29,16 @@ void Model::addMesh(const char* o, const char* string)
 
 bool Model::loadOBJ(
 	const char* path,
-	std::vector<glm::vec3> & out_vertices,
-	std::vector<glm::vec2> & out_uvs,
-	std::vector<glm::vec3> & out_normals
+	std::vector<vec3> & out_vertices,
+	std::vector<vec2> & out_uvs,
+	std::vector<vec3> & out_normals
 	) {
 	printf("Reading .OBJ file %s\n", path);
 
 	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
-	std::vector<glm::vec3> temp_vertices;
-	std::vector<glm::vec2> temp_uvs;
-	std::vector<glm::vec3> temp_normals;
+	std::vector<vec3> temp_vertices;
+	std::vector<vec2> temp_uvs;
+	std::vector<vec3> temp_normals;
 
 
 	FILE * file = fopen(path, "r");
@@ -59,18 +59,18 @@ bool Model::loadOBJ(
 				   // else : parse lineHeader
 
 		if (strcmp(lineHeader, "v") == 0) {
-			glm::vec3 vertex;
+			vec3 vertex;
 			fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
 			temp_vertices.push_back(vertex);
 		}
 		else if (strcmp(lineHeader, "vt") == 0) {
-			glm::vec2 uv;
+			vec2 uv;
 			fscanf(file, "%f %f\n", &uv.x, &uv.y);
 			uv.y = -uv.y; // Invert V coordinate since we will only use DDS texture, which are inverted. Remove if you want to use TGA or BMP loaders.
 			temp_uvs.push_back(uv);
 		}
 		else if (strcmp(lineHeader, "vn") == 0) {
-			glm::vec3 normal;
+			vec3 normal;
 			fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
 			temp_normals.push_back(normal);
 		}
@@ -109,9 +109,9 @@ bool Model::loadOBJ(
 		unsigned int normalIndex = normalIndices[i];
 
 		// Get the attributes thanks to the index
-		glm::vec3 vertex = temp_vertices[vertexIndex - 1];
-		glm::vec2 uv = temp_uvs[uvIndex - 1];
-		glm::vec3 normal = temp_normals[normalIndex - 1];
+		vec3 vertex = temp_vertices[vertexIndex - 1];
+		vec2 uv = temp_uvs[uvIndex - 1];
+		vec3 normal = temp_normals[normalIndex - 1];
 
 		// Put the attributes in buffers
 		out_vertices.push_back(vertex);
@@ -125,14 +125,14 @@ bool Model::loadOBJ(
 void Model::buffers() {
 	glGenBuffers(1, &_vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, _vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, vertices().size() * sizeof(glm::vec3), &vertices()[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices().size() * sizeof(vec3), &vertices()[0], GL_STATIC_DRAW);
 
 	glGenBuffers(1, &_uvbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, _uvbuffer);
-	glBufferData(GL_ARRAY_BUFFER, uvs().size() * sizeof(glm::vec2), &uvs()[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, uvs().size() * sizeof(vec2), &uvs()[0], GL_STATIC_DRAW);
 
 
 	glGenBuffers(1, &_normalbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, _normalbuffer);
-	glBufferData(GL_ARRAY_BUFFER, normals().size() * sizeof(glm::vec3), &normals()[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, normals().size() * sizeof(vec3), &normals()[0], GL_STATIC_DRAW);
 }

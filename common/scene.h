@@ -32,8 +32,9 @@ public:
 
 	void addSprite(Sprite* spr, const char* ddsstring);	
 	void addModel(Model* mdl, const char* objstring, const char* ddsstring);
+	void addBackground(Skydome* mdl, const char* objstring, const char* ddsstring);
 
-	void updateScene(float deltaTime) {}
+	void updateScene(float deltaTime);
 
 	Camera* camera() { return _camera; }
 

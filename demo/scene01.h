@@ -10,7 +10,8 @@ class Scene01 : public Scene
 {
 public:
 	Scene01();
-	~Scene01();
+	virtual ~Scene01();
+	virtual void update(float deltaTime);
 private:
 	Sprite* sprite;
 	Model* cube;

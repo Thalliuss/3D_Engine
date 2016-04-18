@@ -14,6 +14,7 @@ public:
 
 private:
 	Renderer _renderer;
+	double _deltaTime;
 };
 
 

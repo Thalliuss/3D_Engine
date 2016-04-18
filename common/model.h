@@ -13,7 +13,7 @@
 // Include GLFW
 #include <glfw3.h>
 
-// Include GLM
+// Include 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
@@ -22,6 +22,8 @@ using namespace glm;
 #include <vector>
 #include <common/texture.h>
 #include <common/entity.h>
+using namespace std;
+
 
 class Model: public Entity
 {
@@ -29,19 +31,19 @@ public:
 	Model();
 	virtual ~Model();
 
-	void Model::addMesh(const char* o, const char* t);
+	void addMesh(const char* o, const char* t);
 
 	bool loadOBJ(
 		const char* path,
-		std::vector<glm::vec3> & out_vertices,
-		std::vector<glm::vec2> & out_uvs,
-		std::vector<glm::vec3> & out_normals
+		vector<vec3> & out_vertices,
+		vector<vec2> & out_uvs,
+		vector<vec3> & out_normals
 	);
 	void buffers();
 
-	std::vector<glm::vec3> vertices() { return _vertices; }
-	std::vector<glm::vec2> uvs() { return _uvs; }
-	std::vector<glm::vec3> normals() { return _normals; }
+	vector<vec3> vertices() { return _vertices; }
+	vector<vec2> uvs() { return _uvs; }
+	vector<vec3> normals() { return _normals; }
 
 	GLuint texture() { return _texture; }
 
@@ -53,9 +55,9 @@ private:
 	FILE * file;
 	Texture* t;
 
-	std::vector<glm::vec3> _vertices;
-	std::vector<glm::vec2> _uvs;
-	std::vector<glm::vec3> _normals;
+	vector<vec3> _vertices;
+	vector<vec2> _uvs;
+	vector<vec3> _normals;
 
 	GLuint _texture;
 
@@ -64,8 +66,8 @@ private:
 	GLuint _normalbuffer;
 
 
-	std::string texture_name;
-	std::string object_name;
+	string texture_name;
+	string object_name;
 
 };
 
