@@ -30,9 +30,9 @@ public:
 	void start() { _isRunning = true; }
 	void stop() { _isRunning = false; }
 
-	void addSprite(Sprite* spr, const char* ddsstring);	
-	void addModel(Model* mdl, const char* objstring, const char* ddsstring);
-	void addBackground(Skydome* mdl, const char* objstring, const char* ddsstring);
+	void addSprite(Sprite* spr);	
+	void addModel(Model* mdl);
+	void addBackground(Skydome* mdl);
 
 	void updateScene(float deltaTime);
 

@@ -2,7 +2,7 @@
 
 
 Camera::Camera() {
-	ProjectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 2500.0f);
+	ProjectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 5000.0f);
 	position = vec3(0, 0, -5);
 }
 

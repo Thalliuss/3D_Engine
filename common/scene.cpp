@@ -17,50 +17,45 @@ Scene::~Scene()
 	delete _camera;
 }
 
-void Scene::addSprite(Sprite* spr, const char* ddsstring)
+void Scene::addSprite(Sprite* spr)
 {
-	_sprite = new Sprite();
-	*_sprite = *spr;
-	_sprite->addTexture(ddsstring);
-
-	_spritechildren.push_back(_sprite);
+	_spritechildren.push_back(spr);
 }
 
-void Scene::addModel(Model* mdl, const char* objstring, const char* ddsstring)
+void Scene::addModel(Model* mdl)
 {
-	_model = new Model();
-	*_model = *mdl;
-	_model->addMesh(objstring, ddsstring);
+	_modelchildren.push_back(mdl);
+}
+void Scene::addBackground(Skydome* mdl) {
+	_sky = mdl;
+}
 
-	_modelchildren.push_back(_model);
-}
-void Scene::addBackground(Skydome* mdl, const char* objstring, const char* ddsstring) {
-	_sky = new Skydome();
-	*_sky = *mdl;
-	_sky->addMesh(objstring, ddsstring);
-}
 
 void Scene::updateScene(float deltaTime)
 {
+	//update the Scene
 	this->update(deltaTime);
+
+	//update the Background
 	if (_sky != NULL) {
 		_sky->update(deltaTime);
 		_sky->rotation.x += 0.00001;
 		_sky->position = _camera->position;
 	}
+	//update all Models
 	for (int i = 0; i < _modelchildren.size(); i++) {
 		if (_modelchildren[i] != NULL) {
-			Model* _m = new Model();
-			_m = _modelchildren[i];
-			if (_m != NULL) {
-				_m->update(deltaTime);
+			_modelchildren[i]->update(deltaTime);
 
-				//--==[ Test ]==---
-				_m->rotation.x += 0.01;
-				_m->scale.x += 0.001;
-				_m->scale.y += 0.001;
-				_m->scale.z += 0.001;
-			}
+			//###############  Test  ###############
+			//_modelchildren[i]->rotation.x += 0.01;
+			//######################################
+		}
+	}
+	//update all Sprites
+	for (int i = 0; i < _spritechildren.size(); i++) {
+		if (_spritechildren[i] != NULL) {
+			_spritechildren[i]->update(deltaTime);
 		}
 	}
 }

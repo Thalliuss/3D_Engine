@@ -5,6 +5,7 @@ Skydome::Skydome()
 {
 	_texture = NULL;
 
+	this->scale += 20;
 }
 
 Skydome::~Skydome()
