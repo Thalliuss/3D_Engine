@@ -123,9 +123,6 @@ GLuint Texture::loadDDS(const char * imagepath) {
 		getchar();
 		return 0;
 	}
-	else {
-		printf("Reading .DDS file %s.\n", imagepath);
-	}
 
 	/* verify the type of file */
 	char filecode[4];

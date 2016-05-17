@@ -1,9 +1,9 @@
 #include <common/camera.h>
 
-
 Camera::Camera() {
-	ProjectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 5000.0f);
+	ProjectionMatrix = perspective(45.0f, 16.0f / 9.0f, 0.1f, 3300.0f);
 	position = vec3(0, 0, -5);
+	rotation = vec2(0, 0);
 }
 
 mat4 Camera::getViewMatrix() {
@@ -28,29 +28,27 @@ void Camera::updateCamera(GLFWwindow* window)
 	glfwGetCursorPos(window, &xpos, &ypos);
 
 	// Reset mouse position for next frame
-	glfwSetCursorPos(window, 1024 / 2, 750 / 2);
+	glfwSetCursorPos(window, 1920 / 2, 1080 / 2);
 
 	// Compute new orientation
-	horizontalAngle += mouseSpeed * float(1024 / 2 - xpos);
-	verticalAngle += mouseSpeed * float(750 / 2 - ypos);
+	rotation.x += mouseSpeed * float(1920 / 2 - xpos);
+	rotation.y += mouseSpeed * float(1080 / 2 - ypos);
 
 	// Direction : Spherical coordinates to Cartesian coordinates conversion
 	vec3 direction(
-		cos(verticalAngle) * sin(horizontalAngle),
-		sin(verticalAngle),
-		cos(verticalAngle) * cos(horizontalAngle)
+		cos(rotation.y) * sin(rotation.x),
+		sin(rotation.y),
+		cos(rotation.y) * cos(rotation.x)
 		);
 
 	// Right vector
 	vec3 right = vec3(
-		sin(horizontalAngle - 3.14f / 2.0f),
+		sin(rotation.x - 3.14f / 2.0f),
 		0,
-		cos(horizontalAngle - 3.14f / 2.0f)
+		cos(rotation.x - 3.14f / 2.0f)
 		);
-
 	// Up vector
 	vec3 up = cross(right, direction);
-
 	// Move forward
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		position += direction * deltaTime * speed;
@@ -77,5 +75,5 @@ void Camera::updateCamera(GLFWwindow* window)
 
 	// For the next frame, the "last time" will be "now"
 	lastTime = currentTime;
-}
 
+}

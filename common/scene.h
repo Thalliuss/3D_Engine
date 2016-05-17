@@ -30,27 +30,25 @@ public:
 	void start() { _isRunning = true; }
 	void stop() { _isRunning = false; }
 
-	void addSprite(Sprite* spr);	
-	void addModel(Model* mdl);
-	void addBackground(Skydome* mdl);
+	void addChild(Entity* e);
+	void removeChild(Entity* e);
 
 	void updateScene(float deltaTime);
 
+	void updateChildren(float deltaTime, Entity* child, Entity* parent, vec3 offset);
+
 	Camera* camera() { return _camera; }
 
-	std::vector<Sprite*> spritechildren() {return _spritechildren;}
-	std::vector<Model*> modelchildren() {return _modelchildren;}
-	Skydome* sky() { return _sky; }
+	std::vector<Entity*> children() { return _children; }
 
 private:
 	bool _isRunning;
 
-	Camera* _camera;
-	Sprite* _sprite;
-	Model* _model;
-	Skydome* _sky;
+	int _lastChild;
 
-	std::vector<Sprite*> _spritechildren;
-	std::vector<Model*> _modelchildren;
+	Camera* _camera;
+
+	std::vector<Entity*> _children;
+
 };
 #endif // SCENE_H

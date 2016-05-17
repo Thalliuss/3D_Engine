@@ -34,9 +34,8 @@ public:
 	Renderer();
 	virtual ~Renderer();
 	void renderScene(Scene* scene);
-	void renderSkydome(Skydome* skydome);
-	void renderSprite(Sprite* sprite);
-	void renderModel(Model* model);
+	void renderSprite(Entity* sprite);
+	void renderModel(Entity* model);
 
 	GLFWwindow* window() { return _window; };
 

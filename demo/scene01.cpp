@@ -1,34 +1,30 @@
 #include "scene01.h"
 
+// SCENE!
 Scene01::Scene01()
 {
-
-	sprite = new Sprite();
-	sprite->addTexture("assets/uvmap.DDS");
-	this->addSprite(sprite);
-
-	sprite->position.x = 5;
+	skydome = new Skydome();
+	this->addChild(skydome);
+	skydome->addMesh("assets/skydome.obj", "assets/skydome.DDS");
 
 	cube = new Model();
-	cube->addMesh("assets/dat muntje van kevin.obj", "assets/coin-texture.DDS");
-	this->addModel(cube);
+	this->addChild(cube);
+	cube->addMesh("assets/cube.obj", "assets/scene1.DDS");
 
-	cube->position.x = 20;
-	cube->rotation.y = 1.55;
-
-
-	skydome = new Skydome();
-	skydome->addMesh("assets/skydome.obj", "assets/skydome.DDS");
-	this->addBackground(skydome);
-
-	skydome->position.y = -20;
+	sprite = new Sprite();
+	cube->addChild(sprite);
+	sprite->addTexture("assets/uvmap.DDS");
 }
 
 Scene01::~Scene01()
 {
-
+	delete skydome;
+	delete cube;
+	delete sprite;
 }
+
 void Scene01::update(float deltaTime) {
 	cube->rotation.x += 0.005;
-	sprite->position.y += 0.0005;
+	cube->position.x += 0.005;
 }
+

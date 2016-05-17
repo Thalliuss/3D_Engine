@@ -4,6 +4,7 @@
 Core::Core()
 {
 	_deltaTime = 0;
+	counter = 0;
 }
 
 
@@ -19,18 +20,17 @@ void Core::run(Scene* scene)
 	// Update camera instance in Scene
 	scene->camera()->updateCamera(_renderer.window());
 
+	// Call the update method every frame
 	scene->updateScene((float) _deltaTime);
 
-
-	// user clicked the 'close' button in the window
+	// User pressed the 'close' button
 	if (glfwGetKey(_renderer.window(), GLFW_KEY_ESCAPE) == GLFW_PRESS) { scene->stop(); }
 
-	// TODO
-	//if (glfwGetKey(_renderer.window(), GLFW_KEY_RIGHT_BRACKET) == GLFW_PRESS) { scene->next(); }
-	// TODO
-	//if (glfwGetKey(_renderer.window(), GLFW_KEY_LEFT_BRACKET) == GLFW_PRESS) { scene->previous(); }
+	// Next Scene
+	if (glfwGetKey(_renderer.window(), GLFW_KEY_P) == GLFW_PRESS) { if (counter < scenes.size() - 1) { counter++; } }
 
-
+	// Previous Scene
+	if (glfwGetKey(_renderer.window(), GLFW_KEY_O) == GLFW_PRESS) { if (counter > 0) { counter--; } }
 }
 
 

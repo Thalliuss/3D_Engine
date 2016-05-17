@@ -7,6 +7,9 @@
 class Core
 {
 public:
+	int counter;
+	vector<Scene*> scenes;
+
 	Core();
 	~Core();
 	Renderer renderer() { return _renderer; }

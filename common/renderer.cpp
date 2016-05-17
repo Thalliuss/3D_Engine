@@ -2,8 +2,8 @@
 
 Renderer::Renderer()
 {
-	window_width = 1024;
-	window_height = 750;
+	window_width = 1920;
+	window_height = 1080;
 
 	fullbright_fragment_shader = "shaders/fullbright.frag";
 	fullbright_vertex_shader = "shaders/fullbright.vert";
@@ -34,7 +34,9 @@ int Renderer::init()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);	
 
-	// Open a window and create its OpenGL context
+	// Open a window and create its OpenGL context fullscreen
+	GLFWmonitor* primary = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(primary);
 	_window = glfwCreateWindow(window_width, window_height, "Demo", NULL, NULL);
 	if (_window == NULL) {
 		fprintf(stderr, "Failed to open GLFW window.\n");
@@ -52,7 +54,7 @@ int Renderer::init()
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(_window, GLFW_STICKY_KEYS, GL_TRUE);
 	
-// Hide the mouse and enable unlimited mouvement
+    // Hide the mouse and enable unlimited mouvement
 	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
 	// Set the mouse at the center of the screen
@@ -77,9 +79,8 @@ int Renderer::init()
 
 	// Create and compile our GLSL program from the shaders
 	// see: shader.h/cpp
-	programID = shader->LoadShaders(sprite_vertex_shader.c_str(), sprite_fragment_shader.c_str());
 	fullbrightID = shader->LoadShaders(fullbright_vertex_shader.c_str(), fullbright_fragment_shader.c_str());
-
+	programID = shader->LoadShaders(sprite_vertex_shader.c_str(), sprite_fragment_shader.c_str());
 
 	// Get a handle for our buffers
 	vertexPosition_modelspaceID = glGetAttribLocation(programID, "vertexPosition_modelspace");
@@ -111,33 +112,38 @@ void Renderer::renderScene(Scene* scene)
 	// Clear the screen
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
 	// get viewMatrix and projectionMatrix from Camera (Camera position and direction)
 	ViewMatrix = scene->camera()->getViewMatrix();
 	ProjectionMatrix = scene->camera()->getProjectionMatrix();
 
-	if (scene->sky() != NULL) {
-		//render the Background
-		this->renderSkydome(scene->sky());
-	}
+	for (int i = 0; i < scene->children().size(); i++) {
+		glUseProgram(fullbrightID);
 
-	std::vector<Sprite*> sprites = scene->spritechildren();
-	for (int i = 0; i < sprites.size(); i++) {
-		if (sprites[i] != NULL) {
-			// render the Sprite 
-			this->renderSprite(sprites[i]);
+		//check if we need to render sprite's
+		if (scene->children()[i]->isSprite) {
+			this->renderSprite(scene->children()[i]);
 		}
-	}
-
-	//use our standard shaders
-	glUseProgram(programID);
-
-	// see if we need to render anything
-	std::vector<Model*> models = scene->modelchildren();
-	for (int i = 0; i < models.size(); i++) {
-		if (models[i] != NULL) {
-			// render the Model 
-			this->renderModel(models[i]);
+		//check if we need to render a background
+		if (scene->children()[i]->isBackground) {
+			this->renderModel(scene->children()[i]);
+		}
+		//check if we need to render children
+		for (int o = 0; o < scene->children()[i]->children().size(); o++) {
+			if (scene->children()[i]->children()[o]->isSprite) {
+				this->renderSprite(scene->children()[i]->children()[o]);
+			}
+			if (scene->children()[i]->children()[o]->isBackground) {
+				this->renderModel(scene->children()[i]->children()[o]);
+			}
+			if (scene->children()[i]->children()[o]->isModel) {
+				glUseProgram(programID);
+				this->renderModel(scene->children()[i]->children()[o]);
+			}
+		}
+		//check if we need to render model's
+		if (scene->children()[i]->isModel) {
+			glUseProgram(programID);
+			this->renderModel(scene->children()[i]);
 		}
 	}
 
@@ -149,65 +155,7 @@ void Renderer::renderScene(Scene* scene)
 	glfwPollEvents();
 }
 
-
-void Renderer::renderSkydome(Skydome* m) {
-	mat4 ModelMatrix = mat4(1.0f);
-
-	// Build the Model matrix
-	mat4 translationMatrix = translate(mat4(1.0f), vec3(m->position.x, m->position.y, m->position.z));
-	mat4 rotationMatrix = eulerAngleYXZ(m->rotation.x, m->rotation.y, m->rotation.z);
-	mat4 scalingMatrix = scale(mat4(1.0f), vec3(m->scale.x, m->scale.y, m->scale.z));
-
-	ModelMatrix = translationMatrix * rotationMatrix * scalingMatrix;
-
-	mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
-
-	glUseProgram(fullbrightID);
-	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
-	glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
-	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
-
-
-	// Bind our texture in Texture Unit 0
-	if (m->texture() != NULL) {
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, m->texture());
-		// Set our "myTextureSampler" sampler to user Texture Unit 0
-		glUniform1i(textureID, 0);
-	}
-
-	// 1st attribute buffer : vertices
-	glEnableVertexAttribArray(vertexPosition_modelspaceID);
-	glBindBuffer(GL_ARRAY_BUFFER, m->vertexbuffer());
-	glVertexAttribPointer(
-		vertexPosition_modelspaceID,  // The attribute we want to configure
-		3,							  // size : x+y+z => 3
-		GL_FLOAT,					  // type
-		GL_FALSE,					  // normalized?
-		0,							  // stride
-		(void*)0					  // array buffer offset
-		);
-
-	// 2nd attribute buffer : UVs
-	glEnableVertexAttribArray(vertexUVID);
-	glBindBuffer(GL_ARRAY_BUFFER, m->uvbuffer());
-	glVertexAttribPointer(
-		vertexUVID,				    // The attribute we want to configure
-		2,							// size : U+V => 2
-		GL_FLOAT,					// type
-		GL_FALSE,					// normalized?
-		0,							// stride
-		(void*)0					// array buffer offset
-		);
-
-	glDrawArrays(GL_TRIANGLES, 0, m->vertices().size());
-
-	glDisableVertexAttribArray(vertexPosition_modelspaceID);
-	glDisableVertexAttribArray(vertexUVID);
-}
-
-
-void Renderer::renderModel(Model* m)
+void Renderer::renderModel(Entity* m)
 {
 	mat4 ModelMatrix = mat4(1.0f);
 
@@ -221,12 +169,9 @@ void Renderer::renderModel(Model* m)
 
 	mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
-
 	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 	glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
 	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
-
-
 
 	// Bind our texture in Texture Unit 0
 	if (m->texture() != NULL) {
@@ -281,7 +226,7 @@ void Renderer::renderModel(Model* m)
 	glDisableVertexAttribArray(vertexNormal_modelspaceID);
 }
 
-void Renderer::renderSprite(Sprite* s)
+void Renderer::renderSprite(Entity* s)
 {
 	mat4 ModelMatrix = mat4(1.0f);
 
@@ -295,8 +240,6 @@ void Renderer::renderSprite(Sprite* s)
 
 	mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
-
-	glUseProgram(fullbrightID);
 	glUniformMatrix4fv(matrixID, 1, GL_FALSE, &MVP[0][0]);
 	glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
 	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);

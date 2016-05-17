@@ -3,9 +3,12 @@
 Sprite::Sprite()
 {
 	_texture = NULL;
+	this->isSprite = true;
 
 	int sprite_width = 5;
 	int sprite_height = 5;
+
+	isFirst = true;
 
 	// Our vertices. Tree consecutive floats give a 3D vertex; Three consecutive vertices give a triangle.
 	// A sprite has 1 face (quad) with 2 triangles each, so this makes 1*2=2 triangles, and 2*3 vertices
@@ -20,12 +23,12 @@ Sprite::Sprite()
 
 	// Two UV coordinates for each vertex.
 	GLfloat g_uv_buffer_data[] = {
-		1.0f, 0.0f,
-		0.0f, 0.0f,
-		0.0f, 1.0f,
 		0.0f, 1.0f,
 		1.0f, 1.0f,
-		1.0f, 0.0f
+		1.0f, 0.0f,
+		1.0f, 0.0f,
+		0.0f, 0.0f,
+		0.0f, 1.0f
 	};
 
 	glGenBuffers(1, &_vertexbuffer);
@@ -50,14 +53,18 @@ Sprite::~Sprite()
 }
 
 void Sprite::addTexture(const char* string) {
-	file_name = string;
-	if (string != NULL) {
-		std::cout << "##### New Sprite Initialized  #####" << std::endl;
-		_texture = t->loadDDS(file_name.c_str());
-	}else {
-		_texture = t->loadDDS("assets/temp.DDS");
+	if (string != NULL && string != _lastDDS) {
+		if (isFirst) {
+			std::cout << "#####  New Sprite Created  #####" << std::endl;
+			std::cout << "Initializing Sprite's Texture Using:" << std::endl;
+			printf("DDS file %s\n", string);
+			std::cout << "Sprite's Texture Succesfully Initialized..." << std::endl;
+			std::cout << "\n" << std::endl;
+			isFirst = false;
+		}
+		_texture = t->loadDDS(string);
 	}
-	std::cout << "\n" << std::endl;
+	_lastDDS = string;
 }
 
 

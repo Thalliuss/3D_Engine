@@ -12,19 +12,22 @@ class Camera {
 public:
 	Camera();
 
-	glm::vec3 position;
+	vec3 position;
+	vec2 rotation;
+
 	glm::mat4 getViewMatrix();
 	glm::mat4 getProjectionMatrix();
 	void updateCamera(GLFWwindow* window);
+	virtual void update(float deltaTime) {};
+
 private:
 	glm::mat4 ViewMatrix;
 	glm::mat4 ProjectionMatrix;
 
 
-	float horizontalAngle = 0.0f;
-	float verticalAngle = 0.0f;
-	float speed = 50.0f; // 5 units / second
-	float mouseSpeed = 0.005f;
+
+	float speed = 15.0; // 15 units / second
+	float mouseSpeed = 0.0025f;
 
 };
 

@@ -4,6 +4,8 @@
 Model::Model()
 {
 	_texture = NULL;
+	this->isModel = true;
+	isFirst = true;
 }
 
 Model::~Model()
@@ -13,18 +15,23 @@ Model::~Model()
 
 void Model::addMesh(const char* o, const char* string)
 {
-	texture_name = string;
-	if(string != NULL){
-		std::cout << "##### New Model Initialized  #####" << std::endl;
-		_texture = t->loadDDS(texture_name.c_str());
-	}else {
-		_texture = t->loadDDS("assets/temp.DDS");
+	if(string != NULL && o != NULL && string != _lastDDS && o != _lastOBJ){
+		if (isFirst) {
+			std::cout << "#####  New Model Created  #####" << std::endl;
+			std::cout << "Initializing Model's Mesh Using:" << std::endl;
+			printf("DDS file %s\n", string);
+		}
+		if (isFirst) {
+			printf("OBJ file %s\n", o);
+			std::cout << "Model's Mesh Succesfully Initialized..." << std::endl;
+			std::cout << "\n" << std::endl;
+			isFirst = false;
+		}
+		_texture = t->loadDDS(string);
+		loadOBJ(o, _vertices, _uvs, _normals);
 	}
-
-	object_name = o;
-	loadOBJ(object_name.c_str(), _vertices, _uvs, _normals);
-
-	std::cout << "\n" << std::endl;
+	_lastDDS = string;
+	_lastOBJ = o;
 }
 
 bool Model::loadOBJ(
@@ -33,7 +40,6 @@ bool Model::loadOBJ(
 	std::vector<vec2> & out_uvs,
 	std::vector<vec3> & out_normals
 	) {
-	printf("Reading .OBJ file %s\n", path);
 
 	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
 	std::vector<vec3> temp_vertices;
