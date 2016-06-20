@@ -65,6 +65,7 @@ add_executable(demo
 	common/texture.cpp
 	common/sprite.cpp	
 	common/renderer.cpp
+	common/mesh.cpp
 	common/resourcemanager.cpp
 	common/light.cpp
 	common/model.cpp
