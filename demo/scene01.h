@@ -2,6 +2,7 @@
 #define SCENE01_H
 
 #include <common/scene.h>
+#include <common/chunk.h>
 
 class Scene01 : public Scene
 {
@@ -11,9 +12,8 @@ public:
 	virtual void update(float deltaTime);
 
 private:
-	Skydome* skydome;
-	Model* cube;
-	Sprite* sprite;
+	Skybox* sky;
+	Chunk chunk;
 };
 
 #endif // !SCENE01_H
