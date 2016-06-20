@@ -18,6 +18,8 @@ public:
 private:
 	Renderer _renderer;
 	double _deltaTime;
+	double oldtime;
+	double newtime;
 };
 
 
