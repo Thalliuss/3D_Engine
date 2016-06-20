@@ -62,7 +62,7 @@ int Renderer::init()
 	glfwSetCursorPos(_window, window_width / 2, window_height / 2);
 
 	// background
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
@@ -147,7 +147,7 @@ void Renderer::renderScene(Scene* scene)
 		}
 	}
 
-	vec3 lightPos = vec3(10, 10, -50);
+	vec3 lightPos = vec3(10, 25, -50);
 	glUniform3f(lightID, lightPos.x, lightPos.y, lightPos.z);
 
 	// Swap buffers
@@ -157,8 +157,10 @@ void Renderer::renderScene(Scene* scene)
 
 void Renderer::renderModel(Entity* m)
 {
-	mat4 ModelMatrix = mat4(1.0f);
 
+	m = rm.getEntity(m, "");
+
+	mat4 ModelMatrix = mat4(1.0f);
 
 	// Build the Model matrix
 	mat4 translationMatrix = translate(mat4(1.0f), vec3(m->position.x, m->position.y, m->position.z));
@@ -174,12 +176,12 @@ void Renderer::renderModel(Entity* m)
 	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
 
 	// Bind our texture in Texture Unit 0
-	if (m->texture() != NULL) {
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, m->texture());
-		// Set our "myTextureSampler" sampler to user Texture Unit 0
-		glUniform1i(textureID, 0);
-	}
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, rm.getTexture(m->texture()));
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// Set our "myTextureSampler" sampler to user Texture Unit 0
+	glUniform1i(textureID, 0);
 
 	// 1st attribute buffer : vertices
 	glEnableVertexAttribArray(vertexPosition_modelspaceID);
@@ -219,7 +221,7 @@ void Renderer::renderModel(Entity* m)
 		);
 
 
-	glDrawArrays(GL_TRIANGLES, 0, m->vertices().size());
+	glDrawArrays(GL_TRIANGLES, NULL, m->vertices().size());
 
 	glDisableVertexAttribArray(vertexPosition_modelspaceID);
 	glDisableVertexAttribArray(vertexUVID);
@@ -246,7 +248,7 @@ void Renderer::renderSprite(Entity* s)
 
 	// Bind our texture in Texture Unit 0
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, s->texture());
+	glBindTexture(GL_TEXTURE_2D, rm.getTexture(s->texture()));
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// Set our "myTextureSampler" sampler to user Texture Unit 0
@@ -289,10 +291,9 @@ void Renderer::renderSprite(Entity* s)
 		);
 
 	// Draw the triangles !
-	glDrawArrays(GL_TRIANGLES, 0, 2 * 3); // 2*3 indices starting at 0 -> 2 triangles
+	glDrawArrays(GL_TRIANGLES, NULL, 2 * 3); // 2*3 indices starting at 0 -> 2 triangles
 
 	glDisableVertexAttribArray(vertexPosition_modelspaceID);
 	glDisableVertexAttribArray(vertexUVID);
 	glDisableVertexAttribArray(vertexNormal_modelspaceID);
-
 }

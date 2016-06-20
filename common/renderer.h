@@ -23,7 +23,8 @@ using namespace glm;
 #include <common/sprite.h>
 #include <common/model.h>
 #include <common/scene.h>
-#include <common/skydome.h>
+#include <common/resourcemanager.h>
+#include <common/skybox.h>
 
 #include <vector>
 using namespace std;
@@ -38,6 +39,7 @@ public:
 	void renderModel(Entity* model);
 
 	GLFWwindow* window() { return _window; };
+
 
 private:
 	int init();
@@ -70,6 +72,7 @@ private:
 	GLuint lightID;
 
 	Shader* shader;
+	ResourceManager rm;
 };
 
 #endif // !RENDERER_H
