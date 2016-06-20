@@ -1,15 +1,15 @@
 #include <common/camera.h>
 
 Camera::Camera() {
-	ProjectionMatrix = perspective(45.0f, 16.0f / 9.0f, 0.1f, 3300.0f);
-	position = vec3(0, 0, -5);
-	rotation = vec2(0, 0);
+	ProjectionMatrix = glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 3300.0f);
+	position = glm::vec3(0, 5, 0);
+	rotation = glm::vec2(0, 0);
 }
 
-mat4 Camera::getViewMatrix() {
+glm::mat4 Camera::getViewMatrix() {
 	return ViewMatrix;
 }
-mat4 Camera::getProjectionMatrix() {
+glm::mat4 Camera::getProjectionMatrix() {
 	return ProjectionMatrix;
 }
 
@@ -35,20 +35,20 @@ void Camera::updateCamera(GLFWwindow* window)
 	rotation.y += mouseSpeed * float(1080 / 2 - ypos);
 
 	// Direction : Spherical coordinates to Cartesian coordinates conversion
-	vec3 direction(
+	glm::vec3 direction(
 		cos(rotation.y) * sin(rotation.x),
 		sin(rotation.y),
 		cos(rotation.y) * cos(rotation.x)
 		);
 
 	// Right vector
-	vec3 right = vec3(
+	glm::vec3 right = glm::vec3(
 		sin(rotation.x - 3.14f / 2.0f),
 		0,
 		cos(rotation.x - 3.14f / 2.0f)
 		);
 	// Up vector
-	vec3 up = cross(right, direction);
+	glm::vec3 up = cross(right, direction);
 	// Move forward
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		position += direction * deltaTime * speed;

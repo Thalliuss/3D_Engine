@@ -39,6 +39,7 @@ set(ALL_LIBS
 	${OPENGL_LIBRARY}
 	GLFW_303
 	GLEW_190
+	tools
 )
 
 add_definitions(
@@ -58,16 +59,23 @@ add_executable(demo
 	demo/scene02.h
 	common/shader.cpp
 	common/core.cpp
+	common/chunk.cpp
 	common/scene.cpp
 	common/camera.cpp
 	common/texture.cpp
 	common/sprite.cpp	
 	common/renderer.cpp
+	common/resourcemanager.cpp
 	common/light.cpp
 	common/model.cpp
-	common/skydome.cpp
+	common/skybox.cpp
 	common/entity.cpp
 )
+add_library(tools
+	tools/vector_tools.cpp
+	tools/vector_tools.h
+)
+
 target_link_libraries(demo
 	${ALL_LIBS}
 )

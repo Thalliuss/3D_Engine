@@ -2,11 +2,14 @@
 
 Entity::Entity()
 {
-	_texture = NULL;
+	_texture = "";
+	_OBJ = "";
 
-	position = vec3(0.0f, 0.0f, 0.0f);
-	rotation = vec3(0.0f, 0.0f, 0.0f);
-	scale = vec3(1.0f, 1.0f, 1.0f);
+	position = glm::vec3(0.0f, 0.0f, 0.0f);
+	rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+	scale = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	_lastChild = 0;
 
 	isModel = false;
 	isSprite = false;
@@ -14,7 +17,6 @@ Entity::Entity()
     isChild = false;
 	isAlife = false;
 }
-
 Entity::~Entity()
 {
 
@@ -22,6 +24,12 @@ Entity::~Entity()
 
 void Entity::addChild(Entity* e) {
 	_children.push_back(e); 
+	for (int i = 0; i < _children.size(); i++) {
+		_lastChild = i - 1;
+		if (_lastChild > 0 && _children[_lastChild] == e) {
+			_children.erase(_children.begin() + i);
+		}
+	}
 	e->isChild = true;
 }
 void Entity::removeChild(Entity* e) {
@@ -35,7 +43,9 @@ void Entity::removeChild(Entity* e) {
 	}
 }
 
+
 void Entity::update(float deltaTime) {
 
 }
+
 

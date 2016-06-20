@@ -15,7 +15,7 @@
 #include <vector>
 #include <common/camera.h>
 #include <common/entity.h>
-#include <common/skydome.h>
+#include <common/skybox.h>
 
 #include <common/sprite.h>
 #include <common/model.h>
@@ -26,20 +26,20 @@ public:
 	Scene();
 	~Scene();
 
-	bool isRunning() { return _isRunning; ;}
-	void start() { _isRunning = true; }
-	void stop() { _isRunning = false; }
+	bool isRunning() { return _isRunning; ; };
+	void start() { _isRunning = true; };
+	void stop() { _isRunning = false; };
 
 	void addChild(Entity* e);
 	void removeChild(Entity* e);
 
 	void updateScene(float deltaTime);
 
-	void updateChildren(float deltaTime, Entity* child, Entity* parent, vec3 offset);
+	void updateChildren(float deltaTime, Entity* child, Entity* parent, glm::vec3 offset);
 
-	Camera* camera() { return _camera; }
+	Camera* camera() { return _camera; };
 
-	std::vector<Entity*> children() { return _children; }
+	std::vector<Entity*> children() { return _children; };
 
 private:
 	bool _isRunning;

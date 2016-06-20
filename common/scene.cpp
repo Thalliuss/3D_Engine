@@ -40,7 +40,7 @@ void Scene::removeChild(Entity* e) {
 	e->isAlife = false;
 }
 
-void Scene::updateChildren(float deltaTime, Entity* child, Entity* parent, vec3 offset) { //TODO Implement
+void Scene::updateChildren(float deltaTime, Entity* child, Entity* parent, glm::vec3 offset) { //TODO Implement
 	child->rotation = parent->rotation;
 	child->position = parent->position;
 }
@@ -59,7 +59,7 @@ void Scene::updateScene(float deltaTime)
 			_children[i]->position = camera()->position;
 		}
 		for (int o = 0; o < _children[i]->children().size(); o++) {
-			vec3 offset = _children[i]->children()[o]->position;
+			glm::vec3 offset = _children[i]->children()[o]->position;
 			//update all entity's children
 			_children[i]->children()[o]->update(deltaTime);
 			updateChildren(deltaTime, _children[i]->children()[o], _children[i], offset);

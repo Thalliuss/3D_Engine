@@ -11,7 +11,7 @@ public:
 	virtual void update(float deltaTime);
 
 private:
-	Skydome* skydome;
+	Skybox* sky;
 	Model* cube;
 	Sprite* sprite;
 };

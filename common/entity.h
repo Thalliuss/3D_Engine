@@ -17,10 +17,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
-using namespace glm;
 
 #include <vector>
-using namespace std;
 
 #include "common/camera.h"
 #include "common/texture.h"
@@ -45,30 +43,36 @@ public:
 	bool isChild;
 	bool isAlife;
 
-	vector<vec3> _vertices;
-	vector<vec2> _uvs;
-	vector<vec3> _normals;
+	std::vector<glm::vec3> _vertices;
+	std::vector<glm::vec2> _uvs;
+	std::vector<glm::vec3> _normals;
 
-	GLuint _texture;
+
+	std::string _texture;
+	std::string _OBJ;
 	GLuint _vertexbuffer;
 	GLuint _uvbuffer;
 	GLuint _normalbuffer;
 
-	vector<vec3> vertices() { return _vertices; }
-	vector<vec2> uvs() { return _uvs; }
-	vector<vec3> normals() { return _normals; }
+	std::vector<glm::vec3> vertices() { return _vertices; };
+	std::vector<glm::vec2> uvs() { return _uvs; }
+	std::vector<glm::vec3> normals() { return _normals; };
 
-	vector<Entity*> children() { return _children; }
+	std::vector<Entity*> children() { return _children; };
 
 
-	GLuint texture() { return _texture; }
-	GLuint vertexbuffer() { return _vertexbuffer; }
+	std::string texture() { return _texture; };
+	std::string OBJ() { return _OBJ; };
+	GLuint vertexbuffer() { return _vertexbuffer; };
 	GLuint uvbuffer() { return _uvbuffer; }
-	GLuint normalbuffer() { return _normalbuffer; }
+	GLuint normalbuffer() { return _normalbuffer; };
 
 	Texture* t;
+	std::vector<std::string> textures;
 
 private:
-	vector<Entity*> _children;
+	std::vector<Entity*> _children;
+	int _lastChild;
+
 };
 #endif // !ENTITY_H

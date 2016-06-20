@@ -2,7 +2,7 @@
 
 Sprite::Sprite()
 {
-	_texture = NULL;
+	_texture = "";
 	this->isSprite = true;
 
 	int sprite_width = 5;
@@ -62,7 +62,7 @@ void Sprite::addTexture(const char* string) {
 			std::cout << "\n" << std::endl;
 			isFirst = false;
 		}
-		_texture = t->loadDDS(string);
+		_texture = string;
 	}
 	_lastDDS = string;
 }

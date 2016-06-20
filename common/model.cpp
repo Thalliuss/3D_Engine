@@ -1,9 +1,11 @@
 #include "model.h"
 
 
+
 Model::Model()
 {
-	_texture = NULL;
+	_texture = "";
+	_OBJ = "";
 	this->isModel = true;
 	isFirst = true;
 }
@@ -15,41 +17,22 @@ Model::~Model()
 
 void Model::addMesh(const char* o, const char* string)
 {
-	if(string != NULL && o != NULL && string != _lastDDS && o != _lastOBJ){
-		if (isFirst) {
-			std::cout << "#####  New Model Created  #####" << std::endl;
-			std::cout << "Initializing Model's Mesh Using:" << std::endl;
-			printf("DDS file %s\n", string);
-		}
-		if (isFirst) {
-			printf("OBJ file %s\n", o);
-			std::cout << "Model's Mesh Succesfully Initialized..." << std::endl;
-			std::cout << "\n" << std::endl;
-			isFirst = false;
-		}
-		_texture = t->loadDDS(string);
-		loadOBJ(o, _vertices, _uvs, _normals);
-	}
-	_lastDDS = string;
-	_lastOBJ = o;
+	_texture = string;
+	_OBJ = o;
+	loadOBJ(_OBJ.c_str());
 }
 
-bool Model::loadOBJ(
-	const char* path,
-	std::vector<vec3> & out_vertices,
-	std::vector<vec2> & out_uvs,
-	std::vector<vec3> & out_normals
-	) {
+bool Model::loadOBJ(const char* path) {
 
 	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
-	std::vector<vec3> temp_vertices;
-	std::vector<vec2> temp_uvs;
-	std::vector<vec3> temp_normals;
+	std::vector<glm::vec3> temp_vertices;
+	std::vector<glm::vec2> temp_uvs;
+	std::vector<glm::vec3> temp_normals;
 
 
 	FILE * file = fopen(path, "r");
 	if (file == NULL) {
-		printf("Impossible to open the file ! ");
+		printf("Impossible to open the file!, omdat ik kevin zenuwinzinkingen wil geven! :D ");
 		getchar();
 		return false;
 	}
@@ -65,18 +48,18 @@ bool Model::loadOBJ(
 				   // else : parse lineHeader
 
 		if (strcmp(lineHeader, "v") == 0) {
-			vec3 vertex;
+			glm::vec3 vertex;
 			fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
 			temp_vertices.push_back(vertex);
 		}
 		else if (strcmp(lineHeader, "vt") == 0) {
-			vec2 uv;
+			glm::vec2 uv;
 			fscanf(file, "%f %f\n", &uv.x, &uv.y);
 			uv.y = -uv.y; // Invert V coordinate since we will only use DDS texture, which are inverted. Remove if you want to use TGA or BMP loaders.
 			temp_uvs.push_back(uv);
 		}
 		else if (strcmp(lineHeader, "vn") == 0) {
-			vec3 normal;
+			glm::vec3 normal;
 			fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
 			temp_normals.push_back(normal);
 		}
@@ -115,30 +98,28 @@ bool Model::loadOBJ(
 		unsigned int normalIndex = normalIndices[i];
 
 		// Get the attributes thanks to the index
-		vec3 vertex = temp_vertices[vertexIndex - 1];
-		vec2 uv = temp_uvs[uvIndex - 1];
-		vec3 normal = temp_normals[normalIndex - 1];
+		glm::vec3 vertex = temp_vertices[vertexIndex - 1];
+		glm::vec2 uv = temp_uvs[uvIndex - 1];
+		glm::vec3 normal = temp_normals[normalIndex - 1];
 
 		// Put the attributes in buffers
-		out_vertices.push_back(vertex);
-		out_uvs.push_back(uv);
-		out_normals.push_back(normal);
+		_vertices.push_back(vertex);
+		_uvs.push_back(uv);
+		_normals.push_back(normal);
 	}
-	buffers();
-	return true;
-}
 
-void Model::buffers() {
 	glGenBuffers(1, &_vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, _vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, vertices().size() * sizeof(vec3), &vertices()[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices().size() * sizeof(glm::vec3), &vertices()[0], GL_STATIC_DRAW);
 
 	glGenBuffers(1, &_uvbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, _uvbuffer);
-	glBufferData(GL_ARRAY_BUFFER, uvs().size() * sizeof(vec2), &uvs()[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, uvs().size() * sizeof(glm::vec2), &uvs()[0], GL_STATIC_DRAW);
 
 
 	glGenBuffers(1, &_normalbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, _normalbuffer);
-	glBufferData(GL_ARRAY_BUFFER, normals().size() * sizeof(vec3), &normals()[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, normals().size() * sizeof(glm::vec3), &normals()[0], GL_STATIC_DRAW);
+
+	return true;
 }

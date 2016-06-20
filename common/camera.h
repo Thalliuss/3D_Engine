@@ -6,14 +6,13 @@
 // Include GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-using namespace glm;
 
 class Camera {
 public:
 	Camera();
 
-	vec3 position;
-	vec2 rotation;
+	glm::vec3 position;
+	glm::vec2 rotation;
 
 	glm::mat4 getViewMatrix();
 	glm::mat4 getProjectionMatrix();
