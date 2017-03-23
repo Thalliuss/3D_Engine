@@ -28,10 +28,11 @@ class Entity
 public:
 	Entity();
 	virtual ~Entity();
+	
 	virtual void update(float deltaTime);
 
-	void Entity::addChild(Entity* e);
-	void Entity::removeChild(Entity* e);
+	void addChild(Entity* e);
+	void removeChild(Entity* e);
 
 	glm::vec3 position;
 	glm::vec3 rotation;
@@ -47,9 +48,9 @@ public:
 	std::vector<glm::vec2> _uvs;
 	std::vector<glm::vec3> _normals;
 
-
 	std::string _texture;
 	std::string _OBJ;
+	
 	GLuint _vertexbuffer;
 	GLuint _uvbuffer;
 	GLuint _normalbuffer;
@@ -60,9 +61,9 @@ public:
 
 	std::vector<Entity*> children() { return _children; };
 
-
 	std::string texture() { return _texture; };
 	std::string OBJ() { return _OBJ; };
+	
 	GLuint vertexbuffer() { return _vertexbuffer; };
 	GLuint uvbuffer() { return _uvbuffer; }
 	GLuint normalbuffer() { return _normalbuffer; };

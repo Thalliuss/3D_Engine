@@ -35,8 +35,8 @@ int Renderer::init()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);	
 
 	// Open a window and create its OpenGL context fullscreen
-	GLFWmonitor* primary = glfwGetPrimaryMonitor();
-	const GLFWvidmode* mode = glfwGetVideoMode(primary);
+	/*GLFWmonitor* primary = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(primary);*/
 	_window = glfwCreateWindow(window_width, window_height, "Demo", NULL, NULL);
 	if (_window == NULL) {
 		fprintf(stderr, "Failed to open GLFW window.\n");

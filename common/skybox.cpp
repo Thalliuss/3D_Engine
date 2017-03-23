@@ -2,7 +2,7 @@
 
 Skybox::Skybox()
 {
-	this->scale -= 3750;
+	this->scale = glm::vec3(-100, -100, -100);
 	this->loadOBJ("assets/cube.obj");
 	this->isBackground = true;
 }

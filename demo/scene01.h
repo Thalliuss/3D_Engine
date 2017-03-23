@@ -14,6 +14,7 @@ public:
 private:
 	Skybox* sky;
 	Chunk chunk;
+
 };
 
 #endif // !SCENE01_H

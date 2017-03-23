@@ -14,6 +14,5 @@ Scene01::~Scene01(){
 }
 
 void Scene01::update(float deltaTime) {
-
 }
 
